@@ -1,30 +1,23 @@
 const express = require('express');
-const mysql = require('mysql2');
-const dotenv = require('dotenv');
-dotenv.config();
-
+const cors = require('cors');
+const rutas = require('./rutas');
 const app = express();
-const port = process.env.PORT || 5000;
+const port = 3000;
 
-// Configuración de la conexión a la base de datos
-const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
+// Middleware
+app.use(express.json());
+app.use(cors()); // Habilitar CORS para todas las rutas
+
+// Usar las rutas definidas
+app.use('/api', rutas);
+
+// Manejo de errores generales
+app.use((err, req, res, next) => {
+  console.error(err);  // Imprime el error en la consola
+  res.status(500).json({ mensaje: 'Hubo un error en el servidor' });
 });
 
-db.connect((err) => {
-    if (err) {
-        console.error('Error al conectar a la base de datos:', err);
-        process.exit(1);
-    } else {
-        console.log('Conexión a la base de datos exitosa');
-    }
-});
-
-app.use(express.json()); 
-
+// Iniciar servidor
 app.listen(port, () => {
-    console.log(`Servidor corriendo en http://localhost:${port}`);
+  console.log(`Servidor corriendo en http://localhost:${port}`);
 });
