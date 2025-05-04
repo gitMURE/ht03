@@ -3,18 +3,20 @@ const controladores = require('./controladores');
 
 const router = express.Router();
 
-// Verifica que controladores.login sea una función antes de usarla
-console.log('Tipo de controladores.login:', typeof controladores.login);
+// Rutas de autenticación
+router.post('/login', controladores.login);
 
-// Asegúrate de que controladores.login sea una función
-if (typeof controladores.login === 'function') {
-  router.post('/login', controladores.login);
-} else {
-  console.error('ERROR: controladores.login no es una función válida');
-  // Fallback temporal con una función vacía para evitar el error
-  router.post('/login', (req, res) => {
-    res.status(500).json({ mensaje: 'Error de configuración en el servidor' });
-  });
-}
+// Rutas para estudiantes
+router.get('/estudiantes/:estudiante_id/cursos', controladores.obtenerCursosEstudiante);
+
+// Rutas para cursos
+router.get('/cursos/:curso_id/estudiantes', controladores.obtenerEstudiantesCurso);
+
+// Rutas para docentes
+router.post('/estudiantes', controladores.registrarEstudiante);
+router.post('/cursos', controladores.registrarCurso);
+router.post('/inscripciones', controladores.inscribirEstudiante);
+router.get('/estudiantes', controladores.obtenerEstudiantes);
+router.get('/cursos', controladores.obtenerCursos);
 
 module.exports = router;

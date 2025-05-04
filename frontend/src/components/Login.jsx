@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 import "../styles/Login.css";
 
-const Login = () => {
+const Login = ({ onLoginSuccess }) => {
   const [nombreUsuario, setNombreUsuario] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +29,8 @@ const Login = () => {
       if (response.ok) {
         Swal.fire("Éxito", data.mensaje, "success");
         console.log("Datos del usuario:", data.usuario);
-        // Aquí podrías guardar el token/info del usuario y redirigir
+        // Llamar a la función onLoginSuccess con los datos del usuario
+        onLoginSuccess && onLoginSuccess(data.usuario);
       } else {
         Swal.fire("Error", data.mensaje || "Error de autenticación", "error");
       }
